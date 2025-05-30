@@ -65,3 +65,10 @@
 .nav-right{
   text-align: right;
 }
+
+.invalid-input{
+  color: red;
+  margin-top: -20px;
+  display: block;
+  margin-left: 25px;
+}
