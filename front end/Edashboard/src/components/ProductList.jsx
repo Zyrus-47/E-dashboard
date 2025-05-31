@@ -17,7 +17,18 @@ const ProductList = () => {
     }
   };
 
-  console.warn("products:", products);
+  const deleteProduct = async (id) => {
+  let result = await fetch(`http://localhost:5000/product/${id}`, {
+    method: "DELETE"
+  });
+
+  result = await result.json();
+
+  if (result) {
+    getProducts();
+  }
+};
+
 
   return (
     <div className="product-list">
@@ -27,6 +38,7 @@ const ProductList = () => {
         <li>Name</li>
         <li>Price</li>
         <li>Category</li>
+        <li>Operation</li>
       </ul>
       {
         products.length > 0 ? (
@@ -36,6 +48,7 @@ const ProductList = () => {
               <li>{item.name}</li>
               <li>{item.price}</li>
               <li>{item.category}</li>
+              <li><button onClick={()=>deleteProduct(item._id)}>Delete</button></li>
             </ul>
           ))
         ) : (
