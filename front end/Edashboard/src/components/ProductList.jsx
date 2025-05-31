@@ -10,7 +10,11 @@ const ProductList = () => {
 
   const getProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/products');
+      const response = await fetch('http://localhost:5000/products', {
+        headers: {
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`
+        }
+      });
       const result = await response.json();
       setProducts(result);
     } catch (error) {
@@ -19,37 +23,45 @@ const ProductList = () => {
   };
 
   const deleteProduct = async (id) => {
-  let result = await fetch(`http://localhost:5000/product/${id}`, {
-    method: "DELETE"
-  });
+    let result = await fetch(`http://localhost:5000/product/${id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`
+      }
+    });
 
-  result = await result.json();
+    result = await result.json();
 
-  if (result) {
-    getProducts();
-  }
-};
+    if (result) {
+      getProducts();
+    }
+  };
 
-const searchHandle=async (event)=>{
-  let key =event.target.value;
-  if(key){
-    let result = await fetch(`http://localhost:5000/search/${key}`);
-  result= await result.json();
-  if(result){
-    setProducts(result)
-  }
-  }else{
-    getProducts();
-  }
-  
-}
-
+  const searchHandle = async (event) => {
+    let key = event.target.value;
+    if (key) {
+      let result = await fetch(`http://localhost:5000/search/${key}`, {
+        headers: {
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`
+        }
+      });
+      result = await result.json();
+      if (result) {
+        setProducts(result);
+      }
+    } else {
+      getProducts();
+    }
+  };
 
   return (
     <div className="product-list">
       <h3>Product List</h3>
-      <input type="text" placeholder="Search Product" className="search-product-box"
-      onChange={searchHandle}
+      <input
+        type="text"
+        placeholder="Search Product"
+        className="search-product-box"
+        onChange={searchHandle}
       />
       <ul className="list-header">
         <li>S. No</li>
@@ -67,8 +79,8 @@ const searchHandle=async (event)=>{
               <li>{item.price}</li>
               <li>{item.category}</li>
               <li>
-                <button onClick={()=>deleteProduct(item._id)}>Delete</button>
-              <Link to={"/update/"+item._id}>Update</Link>
+                <button onClick={() => deleteProduct(item._id)}>Delete</button>
+                <Link to={"/update/" + item._id}>Update</Link>
               </li>
             </ul>
           ))

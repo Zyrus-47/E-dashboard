@@ -1,35 +1,35 @@
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import React from "react";
-import {useNavigate} from 'react-router-dom' 
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
-  
-    useEffect(()=>{
-      const auth=localStorage.getItem("user");
-      if(auth)
-      {
-        navigate('/')
-      }
-    })
 
-  const collectData = async() => {
-    console.warn(name, email, password);
-    let result= await fetch('http://localhost:5000/register',{
-      method :'post',
-      body: JSON.stringify({name, email, password}),
-      headers:{
-        'Content-Type':'application/json'
+  useEffect(() => {
+    const auth = localStorage.getItem("user");
+    if (auth) {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const collectData = async () => {
+    let result = await fetch('http://localhost:5000/register', {
+      method: 'post',
+      body: JSON.stringify({ name, email, password }),
+      headers: {
+        'Content-Type': 'application/json'
       },
     });
-    result=await result.json()
-    console.warn(result);
-    localStorage.setItem("user",JSON.stringify(result));
-    if(result){
-      navigate ('/')
+
+    result = await result.json();
+
+    if (result && result.auth && result.user) {
+      localStorage.setItem("user", JSON.stringify(result.user));
+      localStorage.setItem("token", JSON.stringify(result.auth));
+      navigate('/');
     }
   };
 

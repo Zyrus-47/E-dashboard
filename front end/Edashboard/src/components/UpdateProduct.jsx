@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const UpdateProduct = () => {
   const [name, setName] = useState('');
@@ -7,38 +7,49 @@ const UpdateProduct = () => {
   const [category, setCategory] = useState('');
   const [company, setCompany] = useState('');
   const params = useParams();
-  const navigate =useNavigate();
+  const navigate = useNavigate();
 
-  
   useEffect(() => {
     getProductDetails();
   }, []);
 
   const getProductDetails = async () => {
-    let result = await fetch(`http://localhost:5000/product/${params.id}`);
-    result = await result.json();
-    setName(result.name);
-    setPrice(result.price);
-    setCategory(result.category);
-    setCompany(result.company);
+    try {
+      let result = await fetch(`http://localhost:5000/product/${params.id}`, {
+        headers: {
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`
+        }
+      });
+      result = await result.json();
+      if (result) {
+        setName(result.name || '');
+        setPrice(result.price || '');
+        setCategory(result.category || '');
+        setCompany(result.company || '');
+      }
+    } catch (err) {
+      console.error("Failed to fetch product details:", err);
+    }
   };
 
   const updateProduct = async () => {
-  console.warn(name, price, category, company);
-  
-  let result = await fetch(`http://localhost:5000/product/${params.id}`, {
-    method: "PUT",
-    body: JSON.stringify({ name, price, category, company }),
-    headers: {
-      "Content-Type": "application/json", 
-    },
-  });
+    try {
+      let result = await fetch(`http://localhost:5000/product/${params.id}`, {
+        method: "PUT",
+        body: JSON.stringify({ name, price, category, company }),
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`
+        },
+      });
 
-  result = await result.json();
-  console.warn(result);
-  navigate('/')
-};
-
+      result = await result.json();
+      console.warn(result);
+      navigate('/');
+    } catch (err) {
+      console.error("Failed to update product:", err);
+    }
+  };
 
   return (
     <div className="product">
