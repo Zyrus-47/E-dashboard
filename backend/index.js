@@ -64,4 +64,26 @@ app.get("/product/:id",async (req,resp)=>{
 })
 
 
+app.put("/product/:id",async(req,resp)=>{
+    let result= await Product.updateOne(
+    {_id: req.params.id},
+    {
+        $set : req.body
+    }
+)
+resp.send(result)
+})
+
+
+app.get("/search/:key",async(req,resp)=>{
+    let result= await Product.find({
+        "$or":[
+            {name:{$regex:req.params.key}},
+            {company:{$regex:req.params.key}},
+            {category:{$regex:req.params.key}}
+        ]
+    });
+    resp.send(result)
+})
+
 app.listen(5000);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 
 const UpdateProduct = () => {
   const [name, setName] = useState('');
@@ -7,8 +7,9 @@ const UpdateProduct = () => {
   const [category, setCategory] = useState('');
   const [company, setCompany] = useState('');
   const params = useParams();
+  const navigate =useNavigate();
 
-  // Step 2: Fetch existing product details on load
+  
   useEffect(() => {
     getProductDetails();
   }, []);
@@ -23,8 +24,21 @@ const UpdateProduct = () => {
   };
 
   const updateProduct = async () => {
-    console.warn(name, price, category, company);
-  };
+  console.warn(name, price, category, company);
+  
+  let result = await fetch(`http://localhost:5000/product/${params.id}`, {
+    method: "PUT",
+    body: JSON.stringify({ name, price, category, company }),
+    headers: {
+      "Content-Type": "application/json", 
+    },
+  });
+
+  result = await result.json();
+  console.warn(result);
+  navigate('/')
+};
+
 
   return (
     <div className="product">
