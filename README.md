@@ -17,10 +17,9 @@ E-Dashboard is a full-stack product management application built using the MERN 
 
 ## Screenshots
 
-
-
-
-
+![Screenshot 1](https://github.com/Zyrus-47/E-dashboard/blob/main/Screenshot%202025-05-31%20162735.png)  
+![Screenshot 2](https://github.com/Zyrus-47/E-dashboard/blob/main/Screenshot%202025-05-31%20162748.png)  
+![Screenshot 3](https://github.com/Zyrus-47/E-dashboard/blob/main/Screenshot%202025-06-16%20213847.png)
 
 ## Setup Instructions
 
